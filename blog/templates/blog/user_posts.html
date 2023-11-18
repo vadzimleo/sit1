@@ -1,0 +1,134 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <div class="left">
+        <h2 class="mb-3">{{ name }}' blog posts ({{ page_obj.paginator.count }})</h2> 
+    </div>
+    <div class="righ">
+    current user:  &#160 {{ user.username }}<br/><br>
+    </div>
+    <style>
+    .left {text-align: left;}
+    .righ {text-align: right;}
+    </style>
+    <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ post.author.profile.picture.url }}" > 
+    </article> 
+    {% for post in page_obj %}  
+        {{post.text}}
+        <article class="media content-section">
+          
+          &nbsp&nbsp&nbsp &nbsp&#160 &nbsp &#160&#160&#160 &nbsp  &nbsp &#160&#160 &nbsp &#160&#160&#160
+          &nbsp &#160&#160&#160 &nbsp &#160&#160 &nbsp &#160&#160&#160 &nbsp &#160&#160&#160 &nbsp 
+          &#160&#160 &nbsp &#160&#160&#160 &nbsp &#160&#160&#160 &nbsp &#160&#160 &nbsp &#160&#160&#160
+          &nbsp &#160&#160 &nbsp &#160&#160 <small>current user..  {{  user.id     }} </small>    
+          <p align="right"> post's author:  <small> {{ post.author.id }}</small></p>
+          <style>
+            .left {
+            text-align: left;
+            }
+          </style>
+          <div class="media-body">   
+            <div class="article-metadata">  
+              <a class="mr-2">{{ post.author }}</a>
+              
+              <small class="text-muted">{{ post.date_posted|date:"P(e) dS E-W, D(w), o-z, U" }}</small>
+            </div>
+            <h2><a class="article-title" href=" {% url 'post' post.pk %} ">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+
+      
+    {{ paginator.num_pages }}
+    {{ paginator.page_range }}
+    {{ page_obj.paginator.page_range }} 
+    {{ page_obj.paginator.count }}
+    {{ page_obj.number }}
+    
+      {{ paginator.num_pages.previous_page_number }}
+
+    <nav class="blog-pagination justify-content-center d-flex"></nav> 
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <a class="btn btn-outline-info" href="?page=1">First page</a>
+                {% if page_obj.number > 2 %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">
+                Previous page</a>
+                {% endif %}
+            {% endif %}
+
+            {% if page_obj.number == 1 %}
+            <a class="btn btn-info mb-5" href="?page=1">First page</a>
+            {% elif page_obj.number == 16 %}
+            <a class="btn btn-info mb-5" href="?page={{ page_obj.number }}">Last page</a>
+            {% else %}
+            <a class="btn btn-info mb-5" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+            {% endif %}
+                
+            {% if page_obj.has_next %}
+            {% if page_obj.number != paginator.num_pages|add:'-1' %}
+                <a class="btn btn-outline-info mb-5" href="?page={{ page_obj.next_page_number }}">Next page</a>
+            {% endif %}
+            <a class="btn btn-outline-info mb-5" href="?page={{ paginator.num_pages }}">Last page</a>
+            {% endif %}<br/>
+            <br/><br/>
+        </ul>
+    </nav>    
+    
+    
+    {% if page_obj.number != 1 %}
+        <a class="btn btn-outline-info mb-5" href="?page=1">First page</a>
+    
+        {% if page_obj.number > 2 %}
+        <a class="btn btn-outline-info mb-5" href="?page={{ page_obj.previous_page_number }}">
+        {{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
+
+    <a class="btn btn-info mb-5" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+
+    {% if page_obj.number < paginator.num_pages|add:'-1' %}
+    <a class="btn btn-outline-info mb-5" href="?page={{ page_obj.next_page_number }}">
+    {{ page_obj.next_page_number }}</a>
+    {% endif %}
+    {% if page_obj.number != paginator.num_pages %} 
+        <a class="btn btn-outline-info mb-5" href="?page={{ paginator.num_pages }}">Last page</a> 
+    {% endif %}
+    <br/>      <br/>
+
+
+    
+    {% for n in paginator.page_range %}
+        
+        <a class="btn btn-outline-info mb-5" href="?page={{ n }}">{{n}}</a>
+    {% endfor %}      
+    <br/>
+
+    
+    <div class="content-section"> 
+        {% if page_obj.has_previous %} 
+            <a class="btn btn-outline-info mb-5" href="?page=1">First</a>
+            <a class="btn btn-outline-info mb-5">    </a>
+            <a class="btn btn-outline-info mb-5" href="?page={{page_obj.previous_page_number}}">Previous</a>
+        {% endif %}
+
+        {% for n in paginator.page_range %}  
+
+            {% if n == page_obj.number %}     
+                <a class="btn btn-info mb-5" href="?page={{n}}">{{n}}</a>
+            {% elif n > page_obj.number|add:'-3' and n < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-5" href="?page={{ n }}">{{n}}</a>        
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-info mb-5" href="?page={{page_obj.next_page_number}}">Next</a>
+            <a class="btn btn-outline-info mb-5">    </a>
+            <a class="btn btn-outline-info mb-5" href="?page={{ paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+         
+   
+{% endblock content %}
+
